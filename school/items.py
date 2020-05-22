@@ -106,3 +106,13 @@ class SpecialItem(scrapy.Item):
     i_view_month = scrapy.Field()
     i_level2 = scrapy.Field()
     pass
+
+class LineproItem(scrapy.Item):
+    # define the fields for your item here like:
+    c_id = scrapy.Field()
+    i_average = scrapy.Field()
+    c_local_batch_name = scrapy.Field()
+    c_local_province_name = scrapy.Field()
+    c_local_type_name = scrapy.Field()
+    i_year = scrapy.Field()
+    pass

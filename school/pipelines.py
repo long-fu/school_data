@@ -12,8 +12,6 @@ class db_conntect():
         self.cursor = self.connect.cursor()
         pass
     
-   
-
     def process_special_item(self,item):
         insert_sql = """
         insert into `special_db` (c_url,c_limit_year, c_level2_name, i_special_id, c_degree, i_rank_type, i_view_week, i_view_total, c_level3_name, c_name, i_rank, i_rankall, c_id, c_spcode, i_level1, i_level3, c_level1_name, i_view_month, i_level2)
@@ -26,7 +24,7 @@ values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
     
     def process_school_update(self,item):
         i_school_id = item['i_school_id']
-        
+
         i_view_month = item['i_view_month']
         c_view_total = item['c_view_total']
         i_view_total_number = item['i_view_total_number']
@@ -85,7 +83,26 @@ values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
             print("错误")
         pass
 
+    def process_linepro_item(self,item):
 
+        insert_sql = """
+insert into linepro_tb (`c_id`, `i_average`, `c_local_batch_name`, `c_local_province_name`, `c_local_type_name`, `i_year`) values (%s,%s,%s,%s,%s,%s);
+        """
+
+        values = (item['c_id'],item['i_average'],item['c_local_batch_name'],item['c_local_province_name'],item['c_local_type_name'],item['i_year'])
+
+        self.cursor.execute(insert_sql,values)
+        self.connect.commit()
+        pass
+
+
+
+class SchoolIIPipeline(object):
+    def process_item(self, item, spider):
+        db = db_conntect()
+        
+        db.close()
+        return item
 
 class SchoolPipeline(object):
     def process_item(self, item, spider):
@@ -98,5 +115,12 @@ class SpecialPipeline(object):
     def process_item(self, item, spider):
         db = db_conntect()
         db.process_special_item(item)
+        db.close()
+        return item
+
+class LineproPipeline(object):
+    def process_item(self, item, spider):
+        db = db_conntect()
+        db.process_linepro_item(item)
         db.close()
         return item
